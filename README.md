@@ -8,7 +8,7 @@
 - 🏷️ 基線篩選 — Low / Moderate / High / Privacy 多選篩選
 - 📋 家族總覽 — 20 個控制家族卡片式展示（含基線涵蓋統計）
 - 📊 控制項清單 — 324 個基礎控制項完整表格，點擊展開詳情
-- 🌗 Dark Mode — 自動跟隨系統主題
+- 🌗 Dark Mode — 手動切換 System / Light / Dark，偏好自動記憶
 - 📱 RWD — 支援行動裝置瀏覽
 
 ## Tech Stack
