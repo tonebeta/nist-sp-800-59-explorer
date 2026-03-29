@@ -17,6 +17,23 @@ export default function App() {
   const [expandedControl, setExpandedControl] = useState(null);
   const [view, setView] = useState("families"); // families | controls
   const detailRef = useRef(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "system");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "system") {
+      root.removeAttribute("data-theme");
+      localStorage.removeItem("theme");
+    } else {
+      root.setAttribute("data-theme", theme);
+      localStorage.setItem("theme", theme);
+    }
+  }, [theme]);
+
+  const cycleTheme = () => setTheme((t) => (t === "system" ? "light" : t === "light" ? "dark" : "system"));
+
+  const themeIcon = theme === "light" ? "☀️" : theme === "dark" ? "🌙" : "💻";
+  const themeLabel = theme === "light" ? "Light" : theme === "dark" ? "Dark" : "System";
 
   const filteredControls = useMemo(() => {
     let result = CONTROLS;
@@ -65,8 +82,9 @@ export default function App() {
       <style>{`
         :root { --bg: #f8fafc; --text: #1e293b; --card: #ffffff; --border: #e2e8f0; --muted: #64748b; --accent: #0f172a; --hover: #f1f5f9; --ring: #3b82f6; }
         @media (prefers-color-scheme: dark) {
-          :root { --bg: #0f172a; --text: #e2e8f0; --card: #1e293b; --border: #334155; --muted: #94a3b8; --accent: #f1f5f9; --hover: #334155; --ring: #60a5fa; }
+          :root:not([data-theme="light"]) { --bg: #0f172a; --text: #e2e8f0; --card: #1e293b; --border: #334155; --muted: #94a3b8; --accent: #f1f5f9; --hover: #334155; --ring: #60a5fa; }
         }
+        [data-theme="dark"] { --bg: #0f172a; --text: #e2e8f0; --card: #1e293b; --border: #334155; --muted: #94a3b8; --accent: #f1f5f9; --hover: #334155; --ring: #60a5fa; }
         * { box-sizing: border-box; }
         ::selection { background: var(--ring); color: white; }
         input:focus, button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
@@ -95,9 +113,17 @@ export default function App() {
 
       {/* Header */}
       <header style={{ padding: "32px 0 24px", borderBottom: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0, letterSpacing: "-0.5px" }}>NIST SP 800-53</h1>
           <span style={{ fontSize: 14, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace" }}>Rev 5</span>
+          <button
+            onClick={cycleTheme}
+            title={`Theme: ${themeLabel}`}
+            style={{ marginLeft: "auto", background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 13, color: "var(--text)", fontFamily: "'IBM Plex Mono', monospace", display: "flex", alignItems: "center", gap: 6, transition: "all 0.15s" }}
+          >
+            <span>{themeIcon}</span>
+            <span>{themeLabel}</span>
+          </button>
         </div>
         <p style={{ color: "var(--muted)", fontSize: 14, margin: "6px 0 0", lineHeight: 1.5 }}>
           Security and Privacy Controls for Information Systems and Organizations — 安全與隱私控制項完整互動式清單
